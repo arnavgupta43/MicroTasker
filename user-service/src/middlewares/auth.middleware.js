@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const { StatusCodes } = require("http-status-codes");
+import jwt from "jsonwebtoken";
+import { StatusCodes } from "http-status-codes";
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -21,5 +21,4 @@ const authMiddleware = async (req, res, next) => {
       .json({ status: "failed", msg: "Invalid or expired token" });
   }
 };
-
-module.exports = auth;
+export default authMiddleware;

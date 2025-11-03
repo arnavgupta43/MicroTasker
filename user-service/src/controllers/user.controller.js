@@ -1,5 +1,5 @@
-const { registerUser, loginUser } = require("../services/user.service");
-const { StatusCodes } = require("http-status-codes");
+import { registerUser, loginUser } from "../services/user.service.js";
+import { StatusCodes } from "http-status-codes";
 const register = async (req, res) => {
   try {
     const { username, name, email, password } = req.body;
@@ -23,3 +23,4 @@ const login = async (req, res) => {
       .json({ success: false, error: error.message });
   }
 };
+export { register, login };

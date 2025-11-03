@@ -1,15 +1,15 @@
-const User = require("../models/userModel");
-const { publishUserEvent } = require("../queues/producer");
+import User from "../models/user.model.js";
+import publishUserEvent from "../queues/producer.js";
+
 async function registerUser(username, name, email, password) {
   if (!username || !email || !name || !password) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ status: "Failed", msg: "Insuffisent details" });
+    throw new Error("Insufficient user details");
   }
   const existingEmail = await User.findOne({ email });
   const existingUsername = await User.findOne({ username });
-  if (existingEmail || existingUsername) throw new Error("user already exists");
-
+  if (existingEmail || existingUsername) {
+    throw new Error("User already exists");
+  }
   const user = await User.create({
     username,
     email,
@@ -20,19 +20,19 @@ async function registerUser(username, name, email, password) {
   await publishUserEvent("created", { id: user._id, email: user.email });
   return user;
 }
-
 async function loginUser(email, password) {
-  if (!username || !password) throw new Error("InSufficent Data");
+  if (!email || !password) throw new Error("Insufficient data");
+
   const user = await User.findOne({ email });
   if (!user) throw new Error("User not found");
+
   const isPasswordCorrect = await user.matchPassword(password);
   if (!isPasswordCorrect) throw new Error("Incorrect password");
+
   const token = user.createJWT();
-  res.status(StatusCodes.OK).json({ username: user.getName(), token });
-  return { user, token };
+
+  // return structured response instead of sending it
+  return { username: user.getName(), token };
 }
 
-module.exports = {
-  registerUser,
-  loginUser,
-};
+export { registerUser, loginUser };
