@@ -1,0 +1,31 @@
+import amqp from "amqplib";
+let channel;
+let connection;
+
+async function connectionRabbitMq(retries = 10, delay = 5000) {
+  while (retires) {
+    try {
+      connection = await amqp.connect(process.env.RABBITMQ_URL);
+      channel = connection.createChannel();
+      await channel.assertExchange("events.exchange", "topic", {
+        durable: true,
+      });
+      console.log(" Connected to RabbitMQ");
+      return; // success, exit the loop
+    } catch (error) {
+      console.log("Failed to connect with RabbitMQ", error.message);
+      retries -= 1;
+      console.log(`Retrying in ${delay / 1000}s... (${retries} retries left)`);
+      await new Promise((res) => setTimeout(res, delay));
+    }
+  }
+  console.error("Failed to connect to rabbitMQ after 10 attempt");
+  process.exit(1);
+}
+
+export function getChannel() {
+  if (!channel) console.error("channel not initialized");
+  return channel;
+}
+
+export { connectionRabbitMq };
