@@ -10,6 +10,17 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+  task-service:
+    build: ./ task-service
+    container_name: task-service
+    restart: always
+    ports:
+      - "4002:4002"
+    env_file:
+      - ./task-service/.env
+    depends_on:
+      - mongo
+      - rabbitmq
   mongo:
     image: mongo:6
     container_name: mongo
