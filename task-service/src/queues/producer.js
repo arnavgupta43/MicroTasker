@@ -1,5 +1,5 @@
 import { getChannel } from "../config/rabbitmq";
-async function publishTaskEvent(eventType, data) {
+export async function publishTaskEvent(eventType, data) {
   const channel = getChannel();
   const message = JSON.stringify({ event: eventType, payload: data });
   await channel.publish(
@@ -9,4 +9,3 @@ async function publishTaskEvent(eventType, data) {
   );
   console.log(`Published event: task ${eventType}`);
 }
-export default publishTaskEvent;
