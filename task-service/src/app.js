@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
-import router from "./routes/task.routes";
+import router from "./routes/task.routes.js";
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 100,

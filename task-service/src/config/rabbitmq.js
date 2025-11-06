@@ -3,10 +3,10 @@ let channel;
 let connection;
 
 async function connectionRabbitMq(retries = 10, delay = 5000) {
-  while (retires) {
+  while (retries) {
     try {
       connection = await amqp.connect(process.env.RABBITMQ_URL);
-      channel = connection.createChannel();
+      channel = await connection.createChannel();
       await channel.assertExchange("events.exchange", "topic", {
         durable: true,
       });

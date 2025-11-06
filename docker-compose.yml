@@ -11,7 +11,7 @@ services:
       - mongo
       - rabbitmq
   task-service:
-    build: ./ task-service
+    build: ./task-service
     container_name: task-service
     restart: always
     ports:

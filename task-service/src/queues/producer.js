@@ -1,4 +1,4 @@
-import { getChannel } from "../config/rabbitmq";
+import { getChannel } from "../config/rabbitmq.js";
 export async function publishTaskEvent(eventType, data) {
   const channel = getChannel();
   const message = JSON.stringify({ event: eventType, payload: data });
