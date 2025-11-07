@@ -4,5 +4,5 @@ const router = express.Router();
 
 router.route("/u/create").post(create);
 router.route("/u/assign").post(assign);
-router.route("u/getAllTasks").get(getAll);
+router.route("/u/getAllTasks").get(getAll);
 export default router;
