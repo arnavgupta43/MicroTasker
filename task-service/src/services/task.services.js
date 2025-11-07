@@ -12,7 +12,7 @@ export async function createTask(title, description, assignedTo) {
 }
 export async function assignTask(taskId, username) {
   if (!taskId || !username) throw new Error("Invalid request");
-  const task = Task.findById(taskId);
+  const task = await Task.findById(taskId);
   if (!task) throw new Error("No Task found");
   task.assignedTo = username;
   task.status = "in-progress";

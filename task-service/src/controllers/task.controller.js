@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 export const create = async (req, res) => {
   try {
     const { title, description, assignedTo } = req.body;
-    const task = createTask(title, description, assignedTo);
+    const task =await createTask(title, description, assignedTo);
     return res.status(StatusCodes.CREATED).json({ success: true, task });
   } catch (error) {
     return res
@@ -14,7 +14,7 @@ export const create = async (req, res) => {
 export const assign = async (req, res) => {
   try {
     const { taskId, userID } = req.body;
-    const task = assignTask(taskId, userID);
+    const task =await assignTask(taskId, userID);
     return res.status(StatusCodes.OK).json({ success: true, task });
   } catch (error) {
     return res
@@ -24,7 +24,7 @@ export const assign = async (req, res) => {
 };
 export const getAll = async (req, res) => {
   try {
-    const allTasks = getAllTasks();
+    const allTasks = await getAllTasks();
     return res.status(StatusCodes.CREATED).json({ success: true, allTasks });
   } catch (error) {
     return res
