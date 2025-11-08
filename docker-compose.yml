@@ -21,6 +21,17 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+  notification-service:
+    build: ./notification-service
+    container_name: notification-service
+    restart: always
+    ports:
+      - "4003:4003"
+    env_file:
+      - ./notification-service/.env
+    depends_on:
+      - mongo
+      - rabbitmq
   mongo:
     image: mongo:6
     container_name: mongo
