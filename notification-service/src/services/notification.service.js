@@ -1,4 +1,4 @@
-import Notification from "../model/notification.model";
+import Notification from "../model/notification.model.js";
 export async function createNotification(
   type,
   message,

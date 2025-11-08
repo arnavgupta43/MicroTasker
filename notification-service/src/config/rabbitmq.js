@@ -1,11 +1,12 @@
 import amqp from "amqplib";
 let channel;
-let connect;
+let connection;
 
 async function connectionRabbitMQ(retries = 10, delay = 5000) {
   while (retries) {
     try {
-      connect = await amqp.connect(process.env.RABBITMQ_URL);
+      connection = await amqp.connect(process.env.RABBITMQ_URL);
+      channel = await connection.createChannel();
       await channel.assertExchange("events.exchange", "topic", {
         durable: true,
       });

@@ -1,5 +1,5 @@
 import express from "express";
-import notificationRoutes from "./routes/notification.routes.js";
+import notificationRoutes from "./routes/notificatio.route.js";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 const limiter = rateLimit({
