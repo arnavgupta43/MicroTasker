@@ -4,7 +4,7 @@ import {
   getAll,
   getByUser,
   remove,
-} from "../controller/notifiaction.controller";
+} from "../controller/notifiaction.controller.js";
 router.route("/").get(getAll);
 router.route("/:userId").get(getByUser);
 router.route("/:id").delete(remove);

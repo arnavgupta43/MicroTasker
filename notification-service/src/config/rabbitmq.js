@@ -22,7 +22,7 @@ async function connectionRabbitMQ(retries = 10, delay = 5000) {
   process.exit(1);
 }
 
-export function getConnection() {
+export function getChannel() {
   if (!channel) console.error("channel not initialised ");
   return channel;
 }
