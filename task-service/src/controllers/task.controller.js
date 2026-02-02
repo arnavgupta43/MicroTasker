@@ -1,9 +1,18 @@
-import { createTask, assignTask, getAllTasks } from "../services/task.services.js";
+import {
+  createTask,
+  assignTask,
+  getAllTasks,
+} from "../services/task.services.js";
 import { StatusCodes } from "http-status-codes";
 export const create = async (req, res) => {
   try {
     const { title, description, assignedTo } = req.body;
-    const task =await createTask(title, description, assignedTo);
+    const task = await createTask(
+      title,
+      description,
+      assignedTo,
+      req.requestId,
+    );
     return res.status(StatusCodes.CREATED).json({ success: true, task });
   } catch (error) {
     return res
@@ -14,7 +23,7 @@ export const create = async (req, res) => {
 export const assign = async (req, res) => {
   try {
     const { taskId, userID } = req.body;
-    const task =await assignTask(taskId, userID);
+    const task = await assignTask(taskId, userID);
     return res.status(StatusCodes.OK).json({ success: true, task });
   } catch (error) {
     return res

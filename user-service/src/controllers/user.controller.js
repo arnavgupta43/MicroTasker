@@ -3,7 +3,13 @@ import { StatusCodes } from "http-status-codes";
 const register = async (req, res) => {
   try {
     const { username, name, email, password } = req.body;
-    const user = await registerUser(username, name, email, password);
+    const user = await registerUser(
+      username,
+      name,
+      email,
+      password,
+      req.requestId,
+    );
     res.status(StatusCodes.CREATED).json({ success: true, user });
   } catch (error) {
     return res

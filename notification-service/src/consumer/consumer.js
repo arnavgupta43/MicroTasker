@@ -1,5 +1,6 @@
 //bind the user and task quesues to create notifications
 import { getChannel } from "../config/rabbitmq.js";
+import logger from "../config/logger.js";
 import { createNotification } from "../services/notification.service.js";
 export async function consumeMessages() {
   const channel = getChannel();
@@ -11,7 +12,12 @@ export async function consumeMessages() {
   console.log("Wasiting for messages");
   channel.consume(queue, async (msg) => {
     const data = JSON.parse(msg.content.toString()); //convert to JSON
+    const requestId = data?.meta?.requestId || "missing";
     console.log("Received:", data);
+    logger.info(
+      { requestId, event: data.event, routingKey: msg.fields.routingKey },
+      "Consumed message",
+    );
     try {
       switch (
         data.event //create the notification accordingly to the event
@@ -21,14 +27,14 @@ export async function consumeMessages() {
             await createNotification(
               "user.created",
               `New user registered: ${data.payload.email}`,
-              data.payload.id
+              data.payload.id,
             );
           } else if (data.payload.title) {
             await createNotification(
               "task.created",
               `New Task created: ${data.payload.title}`,
               null,
-              data.payload.id
+              data.payload.id,
             );
           }
           break;
@@ -37,7 +43,7 @@ export async function consumeMessages() {
             "task.assigned",
             `Task ${data.payload.taskId} assigned to user ${data.payload.userId}`,
             data.payload.userId,
-            data.payload.taskId
+            data.payload.taskId,
           );
           break;
         default:
