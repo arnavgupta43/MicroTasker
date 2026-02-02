@@ -17,7 +17,11 @@ async function registerUser(username, name, email, password) {
     password,
   });
   if (!user) throw new Error("Unable to create user");
-  await publishUserEvent("created", { id: user._id, email: user.email });
+  await publishUserEvent("created", {
+    id: user._id,
+    email: user.email,
+    requestId,
+  });
   return user;
 }
 async function loginUser(email, password) {
