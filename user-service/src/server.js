@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import { connectRabbitMQ, closeRabbitMQ } from "./config/rabbitmq.js";
 dotenv.config();
 const PORT = process.env.PORT || 5000;
+import mongoose from "mongoose";
 import logger from "./config/logger.js";
 let server;
 

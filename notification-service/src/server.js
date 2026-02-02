@@ -1,9 +1,10 @@
 import dotenv from "dotenv";
 import app from "./app.js";
 import { connectionDB } from "./config/db.js";
-import { connectionRabbitMQ } from "./config/rabbitmq.js";
+import { connectionRabbitMQ, closeRabbitMQ } from "./config/rabbitmq.js";
 import { consumeMessages } from "./consumer/consumer.js";
-import { stopConsumer } from "./consumers/consumer.js";
+import { stopConsumer } from "./consumer/consumer.js";
+import mongoose from "mongoose";
 dotenv.config();
 const PORT = process.env.PORT || 5003;
 import logger from "./config/logger.js";
