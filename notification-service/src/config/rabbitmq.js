@@ -1,5 +1,6 @@
 import amqp from "amqplib";
 let channel;
+let channelReady = false;
 let connection;
 
 async function connectionRabbitMQ(retries = 10, delay = 5000) {
@@ -10,6 +11,7 @@ async function connectionRabbitMQ(retries = 10, delay = 5000) {
       await channel.assertExchange("events.exchange", "topic", {
         durable: true,
       });
+      channelReady = true;
       console.log("Connected to RabbotMq");
       return channel;
     } catch (error) {
@@ -26,5 +28,8 @@ async function connectionRabbitMQ(retries = 10, delay = 5000) {
 export function getChannel() {
   if (!channel) console.error("channel not initialised ");
   return channel;
+}
+export function isRabbitReady() {
+  return channelReady;
 }
 export { connectionRabbitMQ };

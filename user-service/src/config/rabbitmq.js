@@ -2,7 +2,7 @@ import amqp from "amqplib";
 
 let connection;
 let channel;
-
+let channelReady = false;
 async function connectRabbitMQ(retries = 10, delay = 5000) {
   while (retries) {
     try {
@@ -12,6 +12,7 @@ async function connectRabbitMQ(retries = 10, delay = 5000) {
         durable: true,
       });
       console.log(" Connected to RabbitMQ");
+      channelReady = true;
       return; // success, exit the loop
     } catch (err) {
       console.error(` RabbitMQ Connection Failed: ${err.message}`);
@@ -28,5 +29,7 @@ export function getChannel() {
   if (!channel) throw new Error("RabbitMQ channel not initialized");
   return channel;
 }
-
+export function isRabbitReady() {
+  return channelReady;
+}
 export { connectRabbitMQ };

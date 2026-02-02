@@ -5,6 +5,7 @@ import router from "./routes/user.routes.js";
 import requestContext from "./middlewares/requestContext.js";
 import logger from "./config/logger.js";
 import pinoHttp from "pino-http";
+import healthRoutes from "./routes/health.route.js";
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 100,
@@ -38,5 +39,6 @@ app.use(
     },
   }),
 );
+app.use("/", healthRoutes);
 app.use("/auth", router);
 export default app;
