@@ -5,6 +5,11 @@ services:
     restart: always
     ports:
       - "4001:4001"
+    healthcheck:
+    test: ["CMD-SHELL", "wget -qO- http://localhost:4001/ready || exit 1"]
+    interval: 10s
+    timeout: 5s
+    retries: 10
     env_file:
       - ./user-service/.env
     depends_on:
@@ -16,6 +21,11 @@ services:
     restart: always
     ports:
       - "4002:4002"
+    healthcheck:
+    test: ["CMD-SHELL", "wget -qO- http://localhost:4002/ready || exit 1"]
+    interval: 10s
+    timeout: 5s
+    retries: 10
     env_file:
       - ./task-service/.env
     depends_on:
@@ -27,6 +37,11 @@ services:
     restart: always
     ports:
       - "4003:4003"
+    healthcheck:
+    test: ["CMD-SHELL", "wget -qO- http://localhost:4003/ready || exit 1"]
+    interval: 10s
+    timeout: 5s
+    retries: 10
     env_file:
       - ./notification-service/.env
     depends_on:
