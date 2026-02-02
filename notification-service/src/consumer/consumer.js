@@ -1,5 +1,6 @@
 //bind the user and task quesues to create notifications
 import { getChannel } from "../config/rabbitmq.js";
+import logger from "../config/logger.js";
 import { createNotification } from "../services/notification.service.js";
 export async function consumeMessages() {
   const channel = getChannel();

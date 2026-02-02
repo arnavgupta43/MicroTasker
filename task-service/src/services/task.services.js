@@ -1,6 +1,6 @@
 import Task from "../models/task.model.js";
 import { publishTaskEvent } from "../queues/producer.js";
-export async function createTask(title, description, assignedTo) {
+export async function createTask(title, description, assignedTo, requestId) {
   if (!title || !description || !assignedTo) throw new Error("Invalid Request");
   const task = await Task.create({ title, description, assignedTo });
   await publishTaskEvent("created", {

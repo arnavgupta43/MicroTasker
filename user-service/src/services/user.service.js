@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import publishUserEvent from "../queues/producer.js";
 
-async function registerUser(username, name, email, password) {
+async function registerUser(username, name, email, password, requestId) {
   if (!username || !email || !name || !password) {
     throw new Error("Insufficient user details");
   }

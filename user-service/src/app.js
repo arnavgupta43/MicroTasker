@@ -4,6 +4,7 @@ import rateLimit from "express-rate-limit";
 import router from "./routes/user.routes.js";
 import requestContext from "./middlewares/requestContext.js";
 import logger from "./config/logger.js";
+import pinoHttp from "pino-http";
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 100,
