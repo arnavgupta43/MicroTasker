@@ -32,4 +32,9 @@ export function getChannel() {
 export function isRabbitReady() {
   return channelReady;
 }
-export { connectRabbitMQ };
+
+async function closeRabbitMQ() {
+  if (channel) await channel.close();
+  if (connection) await connection.close();
+}
+export { connectRabbitMQ, closeRabbitMQ };

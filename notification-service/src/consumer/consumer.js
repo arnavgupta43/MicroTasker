@@ -1,27 +1,29 @@
-//bind the user and task quesues to create notifications
 import { getChannel } from "../config/rabbitmq.js";
 import logger from "../config/logger.js";
 import { createNotification } from "../services/notification.service.js";
+let consumerTag;
+
 export async function consumeMessages() {
   const channel = getChannel();
   const queue = "notification.queue";
-  await channel.assertQueue(queue, { durable: true }); //create queue
-  //blind to user and task queue
+  await channel.assertQueue(queue, { durable: true });
   await channel.bindQueue(queue, "events.exchange", "user.*");
   await channel.bindQueue(queue, "events.exchange", "task.*");
-  console.log("Wasiting for messages");
-  channel.consume(queue, async (msg) => {
-    const data = JSON.parse(msg.content.toString()); //convert to JSON
+  logger.info("Notification consumer waiting for messages");
+  const { consumerTag: tag } = await channel.consume(queue, async (msg) => {
+    if (!msg) return; // safety guard
+    const data = JSON.parse(msg.content.toString());
     const requestId = data?.meta?.requestId || "missing";
-    console.log("Received:", data);
     logger.info(
-      { requestId, event: data.event, routingKey: msg.fields.routingKey },
+      {
+        requestId,
+        event: data.event,
+        routingKey: msg.fields.routingKey,
+      },
       "Consumed message",
     );
     try {
-      switch (
-        data.event //create the notification accordingly to the event
-      ) {
+      switch (data.event) {
         case "created":
           if (data.payload.email) {
             await createNotification(
@@ -32,7 +34,7 @@ export async function consumeMessages() {
           } else if (data.payload.title) {
             await createNotification(
               "task.created",
-              `New Task created: ${data.payload.title}`,
+              `New task created: ${data.payload.title}`,
               null,
               data.payload.id,
             );
@@ -47,11 +49,24 @@ export async function consumeMessages() {
           );
           break;
         default:
-          console.log("Event not recognized");
+          logger.warn({ requestId, event: data.event }, "Unrecognized event");
       }
-      channel.ack(msg); //send the acknowledgement to the channel
+      channel.ack(msg);
     } catch (error) {
-      console.error("Error processing message:", err.message);
+      logger.error(
+        { requestId, error: error.message },
+        "Error processing notification",
+      );
+      // Do NOT ack → message can be retried
     }
   });
+
+  consumerTag = tag;
+}
+export async function stopConsumer() {
+  const channel = getChannel();
+  if (consumerTag) {
+    await channel.cancel(consumerTag);
+    logger.info("RabbitMQ consumer stopped gracefully");
+  }
 }
